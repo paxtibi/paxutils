@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Compiler Value="C:\programmi\lazarus_2.0.6_fpc_3.0.4\fpc\3.0.4\bin\x86_64-win64\fpc.exe" Date="1331391477"/>
+  <Params Value=" -MObjFPC -Scghi -O1 -g -gl -Xg -l -vewnhibq -FiC:\Lavoro\Lazarus\projects\shared\paxtibi\paxutils\lib\x86_64-win64 -FuC:\Lavoro\Lazarus\projects\shared\paxtibi\paxutils\src\test -FuC:\Lavoro\Lazarus\projects\shared\paxtibi\paxutils\src -FuC:\Lavoro\Lazarus\projects\shared\paxtibi\paxutils\pck\lib\x86_64-win64 -FuC:\programmi\lazarus_2.0.6_fpc_3.0.4\lcl\units\x86_64-win64 -FuC:\Lavoro\Lazarus\projects\shared\paxtibi\paxtypes\pck\lib\x86_64-win64 -FuC:\programmi\lazarus_2.0.6_fpc_3.0.4\components\lazutils\lib\x86_64-win64 -FuC:\programmi\lazarus_2.0.6_fpc_3.0.4\packager\units\x86_64-win64 -FuC:\Lavoro\Lazarus\projects\shared\paxtibi\paxutils\pck\ -FUC:\Lavoro\Lazarus\projects\shared\paxtibi\paxutils\lib\x86_64-win64\ -FEC:\Lavoro\Lazarus\projects\shared\paxtibi\paxutils\bin\x86_64-win64\ -oC:\Lavoro\Lazarus\projects\shared\paxtibi\paxutils\bin\x86_64-win64\util_dev.exe util_dev.lpr"/>
+</CONFIG>
