@@ -12,8 +12,8 @@ type
   TCompareResult = -1..1;
 
 const
-  CompareEquals      = 0;
-  CompareLessThan    = Low(TCompareResult);
+  CompareEquals = 0;
+  CompareLessThan = Low(TCompareResult);
   CompareGreaterThan = High(TCompareResult);
 
 
@@ -32,15 +32,17 @@ type
   FILE_PTR = Pointer;
   { TMangagedLibrary }
 
-  TMangagedLibrary = class
+  TMangagedLibrary = class(TInterfacedObject)
   protected
-    FHandle:      THandle;
-    FLocations:   TStringList;
+    FHandle: THandle;
+    FLocations: TStringList;
     FLibraryName: string;
     FBindedToLocation: string;
   protected
     procedure bindEntries; virtual;
     function getProcAddress(entryName: RawByteString; mandatory: boolean = False): Pointer;
+  protected
+    procedure ensureLoaded;
   public
     constructor Create;
     destructor Destroy; override;
@@ -76,7 +78,7 @@ Adapted from
   public
     function isInUsed: boolean;
     procedure acquire;
-    procedure release;
+    procedure Release;
     constructor Create(MaxPermits: cardinal); virtual;
     destructor Destroy; override;
   published
@@ -119,7 +121,7 @@ end;
 
 function TSemaphore.isInUsed: boolean;
 begin
-  result := fPermits < fMaxPermits;
+  Result := fPermits < fMaxPermits;
 end;
 
 procedure TSemaphore.acquire;
@@ -150,7 +152,7 @@ begin
   end;
 end;
 
-procedure TSemaphore.release;
+procedure TSemaphore.Release;
 begin
   EnterCriticalSection(fLock);
   try
@@ -166,7 +168,7 @@ end;
 constructor TSemaphore.Create(MaxPermits: cardinal);
 begin
   fMaxPermits := MaxPermits;
-  fPermits    := MaxPermits;
+  fPermits := MaxPermits;
   InitCriticalSection(fLock);
   FBlockQueue := TQueue.Create;
 end;
@@ -188,7 +190,7 @@ end;
 
 constructor TMangagedLibrary.Create;
 begin
-  FHandle    := NilHandle;
+  FHandle := NilHandle;
   FLocations := TStringList.Create;
 end;
 
@@ -218,7 +220,7 @@ begin
   else
   begin
     // Demand to OS to find library
-    FHandle           := LoadLibrary(FLibraryName + '.' + SharedSuffix);
+    FHandle := LoadLibrary(FLibraryName + '.' + SharedSuffix);
     FBindedToLocation := 'OS Path';
   end;
   if FHandle <> NilHandle then
@@ -259,6 +261,12 @@ begin
   begin
     raise EViolatedMandatoryConstraintException.CreateFmt('%s not found in %s', [entryName, FLibraryName]);
   end;
+end;
+
+procedure TMangagedLibrary.ensureLoaded;
+begin
+  if not loaded then
+    TryLoad;
 end;
 
 initialization
