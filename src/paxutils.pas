@@ -40,17 +40,19 @@ type
     FBindedToLocation: string;
   protected
     procedure bindEntries; virtual;
-    function getProcAddress(entryName: RawByteString; mandatory: boolean = False): Pointer;
+    function getProcAddress(entryName: RawByteString; mandatory: boolean = True): Pointer;
   protected
     procedure ensureLoaded;
+    procedure mandatoryCheck(reference: Pointer; entryPointName: string);
+    procedure TryLoad;
+    procedure UnLoad;
   public
     constructor Create;
     destructor Destroy; override;
-    procedure TryLoad;
-    procedure UnLoad;
     procedure AddLocation(aPath: string);
     procedure removeLocation(aPath: string);
     function loaded: boolean;
+    procedure load;
   end;
 
 
@@ -214,7 +216,7 @@ begin
       if FHandle <> NilHandle then
       begin
         FBindedToLocation := CurrentPath;
-        exit;
+        break;
       end;
     end
   else
@@ -254,6 +256,12 @@ begin
   Result := FHandle <> NilHandle;
 end;
 
+procedure TMangagedLibrary.load;
+begin
+  if not loaded then
+    TryLoad;
+end;
+
 function TMangagedLibrary.getProcAddress(entryName: RawByteString; mandatory: boolean): Pointer;
 begin
   Result := dynlibs.GetProcAddress(FHandle, entryName);
@@ -267,6 +275,12 @@ procedure TMangagedLibrary.ensureLoaded;
 begin
   if not loaded then
     TryLoad;
+end;
+
+procedure TMangagedLibrary.mandatoryCheck(reference: Pointer; entryPointName: string);
+begin
+  if reference = nil then
+    raise ENullPointerException.CreateFmt('Entry point %s not binded', [entryPointName]);
 end;
 
 initialization

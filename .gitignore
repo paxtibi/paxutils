@@ -1,8 +1,8 @@
-bin/
-lib/
 *.a
 *.o
 *.ppu
+*.compiled
+bin/
+lib/
+pck/lib/
 backup/
-*.ppu
-*.ppu
