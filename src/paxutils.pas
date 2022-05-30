@@ -6,7 +6,7 @@ unit paxutils;
 interface
 
 uses
-  Classes, SysUtils, contnrs, ctypes, LMessages, paxtypes;
+  Classes, SysUtils, contnrs, ctypes, LMessages, paxtypes, fgl;
 
 type
   TCompareResult = -1..1;
@@ -15,7 +15,6 @@ const
   CompareEquals = 0;
   CompareLessThan = Low(TCompareResult);
   CompareGreaterThan = High(TCompareResult);
-
 
 type
   ERuntimeException = class(Exception)
@@ -40,7 +39,7 @@ type
     FBindedToLocation: string;
   protected
     procedure bindEntries; virtual;
-    function getProcAddress(entryName: RawByteString; mandatory: boolean = True): Pointer;
+    function getProcAddress(entryName: rawbytestring; mandatory: boolean = True): Pointer;
   protected
     procedure ensureLoaded;
     procedure mandatoryCheck(reference: Pointer; entryPointName: string);
@@ -94,6 +93,48 @@ Adapted from
   TMutex = class(TSemaphore)
   public
     constructor Create(); reintroduce;
+  end;
+
+  IRunnable = interface
+    ['{ED9B730D-2646-4184-BD67-013AC38B81C9}']
+    procedure run;
+  end;
+
+  TTaskQueue = class;
+
+  { TTask }
+
+  TTask = class(TThread)
+  private
+    FActiveQueue: TTaskQueue;
+    FRunner: IRunnable;
+    procedure SetActiveQueue(AValue: TTaskQueue);
+    procedure SetRunner(AValue: IRunnable);
+  protected
+  public
+    constructor Create();
+    destructor Destroy; override;
+    procedure Execute; override;
+    property ActiveQueue: TTaskQueue read FActiveQueue write SetActiveQueue;
+    property runner: IRunnable read FRunner write SetRunner;
+  end;
+
+  { TTask }
+  TTasks = specialize TFPGList<TTask>;
+
+  { TTaskQueue }
+
+  TTaskQueue = class(TTasks)
+  private
+    FSemaphore: TSemaphore;
+    procedure SetSemaphore(AValue: TSemaphore);
+  public
+    procedure add(aTask: TTask);
+    property Semaphore: TSemaphore read FSemaphore write SetSemaphore;
+    procedure Start;
+    procedure Stop;
+    procedure Terminate;
+    function workingCount: uint32;
   end;
 
 
@@ -262,7 +303,7 @@ begin
     TryLoad;
 end;
 
-function TMangagedLibrary.getProcAddress(entryName: RawByteString; mandatory: boolean): Pointer;
+function TMangagedLibrary.getProcAddress(entryName: rawbytestring; mandatory: boolean): Pointer;
 begin
   Result := dynlibs.GetProcAddress(FHandle, entryName);
   if (Result = nil) and mandatory then
@@ -282,6 +323,110 @@ begin
   if reference = nil then
     raise ENullPointerException.CreateFmt('Entry point %s not binded', [entryPointName]);
 end;
+
+
+{ TTask }
+
+procedure TTask.SetActiveQueue(AValue: TTaskQueue);
+begin
+  if FActiveQueue = AValue then
+    Exit;
+  FActiveQueue := AValue;
+end;
+
+procedure TTask.SetRunner(AValue: IRunnable);
+begin
+  if Frunner = AValue then Exit;
+  Frunner := AValue;
+end;
+
+constructor TTask.Create;
+begin
+  inherited Create(True, DefaultStackSize);
+  FreeOnTerminate := True;
+  FActiveQueue := nil;
+end;
+
+destructor TTask.Destroy;
+begin
+  FActiveQueue := nil;
+  FRunner := nil;
+  inherited Destroy;
+end;
+
+procedure TTask.Execute;
+var
+  idx: integer;
+begin
+  ActiveQueue.Semaphore.acquire;
+  if FRunner <> nil then
+  begin
+    FRunner.run;
+  end;
+  if FActiveQueue <> nil then
+  begin
+    idx := FActiveQueue.IndexOf(self);
+    if idx >= 0 then
+      FActiveQueue.Remove(self);
+  end;
+  ActiveQueue.Semaphore.Release;
+end;
+
+procedure TTaskQueue.SetSemaphore(AValue: TSemaphore);
+begin
+  if FSemaphore = AValue then
+    Exit;
+  FSemaphore := AValue;
+end;
+
+procedure TTaskQueue.add(aTask: TTask);
+begin
+  inherited Add(aTask);
+  ATask.ActiveQueue := self;
+end;
+
+procedure TTaskQueue.Start;
+var
+  task: TTask;
+begin
+  for task in self do
+  begin
+    task.Start;
+  end;
+end;
+
+procedure TTaskQueue.Stop;
+var
+  task: TTask;
+begin
+  for task in self do
+  begin
+    task.Suspend;
+  end;
+end;
+
+procedure TTaskQueue.Terminate;
+var
+  task: TTask;
+begin
+  for task in self do
+  begin
+    task.Terminate;
+  end;
+end;
+
+function TTaskQueue.workingCount: uint32;
+var
+  task: TTask;
+begin
+  Result := 0;
+  for task in self do
+  begin
+    if not task.Finished then
+      InterLockedIncrement(Result);
+  end;
+end;
+
 
 initialization
 
