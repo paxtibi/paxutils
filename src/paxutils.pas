@@ -116,7 +116,6 @@ Adapted from
     FRunner: IRunnable;
     procedure SetActiveQueue(AValue: TTaskQueue);
     procedure SetRunner(AValue: IRunnable);
-  protected
   public
     constructor Create();
     destructor Destroy; override;
@@ -132,9 +131,12 @@ Adapted from
 
   TTaskQueue = class(TTasks)
   private
+    FStarted: boolean;
     FSemaphore: TSemaphore;
     procedure SetSemaphore(AValue: TSemaphore);
+    procedure OnTaskTerminate(Task: TObject);
   public
+    procedure AfterConstruction; override;
     procedure add(aTask: TTask);
     property Semaphore: TSemaphore read FSemaphore write SetSemaphore;
     procedure Start;
@@ -476,16 +478,31 @@ begin
   FSemaphore := AValue;
 end;
 
+procedure TTaskQueue.OnTaskTerminate(Task: TObject);
+begin
+  Self.Remove(Task as TTask);
+end;
+
+procedure TTaskQueue.AfterConstruction;
+begin
+  inherited AfterConstruction;
+  FStarted := False;
+end;
+
 procedure TTaskQueue.add(aTask: TTask);
 begin
   inherited Add(aTask);
   ATask.ActiveQueue := self;
+  aTask.OnTerminate := @OnTaskTerminate;
+  if FStarted then
+    aTask.Start;
 end;
 
 procedure TTaskQueue.Start;
 var
   task: TTask;
 begin
+  FStarted := True;
   for task in self do
   begin
     task.Start;
@@ -496,6 +513,7 @@ procedure TTaskQueue.Stop;
 var
   task: TTask;
 begin
+  FStarted := False;
   for task in self do
   begin
     task.Suspend;
@@ -509,6 +527,8 @@ begin
   for task in self do
   begin
     task.Terminate;
+    self.Remove(task);
+    task.Free;
   end;
 end;
 
@@ -519,8 +539,11 @@ begin
   Result := 0;
   for task in self do
   begin
-    if not task.Finished then
-      InterLockedIncrement(Result);
+    try
+      if not task.Finished then
+        InterLockedIncrement(Result);
+    except
+    end;
   end;
 end;
 
