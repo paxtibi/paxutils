@@ -8,7 +8,9 @@ unit paxutils_package;
 interface
 
 uses
-  paxutils, LazarusPackageIntf;
+  paxutils, paxutils.designpatterns, paxutils.chartjs.org, paxutils.batch, 
+  paxutils.persistence, paxutils.persistence.engines, paxutils.xml.dom3, 
+  LazarusPackageIntf;
 
 implementation
 

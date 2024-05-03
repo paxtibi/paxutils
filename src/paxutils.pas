@@ -4,17 +4,17 @@ unit paxutils;
 {$M+}
 {$ModeSwitch typehelpers}
 {$ModeSwitch advancedrecords}
-{$if FPC_FULLVERSION >= 30301 }
-  {$modeswitch prefixedattributes}
-  {$define custom_attributes}
-{$endif}
-
+{$If FPC_FULLVERSION >= 30301 }
+{$ModeSwitch prefixedattributes}
+{$EndIf}
+{$INLINE ON}
 interface
 
 uses
   Classes, SysUtils, contnrs, fgl;
 
 type
+  THashCode = PtrInt;
   TCompareResult = -1..1;
 
 const
@@ -22,16 +22,6 @@ const
   CompareLessThan = Low(TCompareResult);
   CompareGreaterThan = High(TCompareResult);
 
-type
-  ERuntimeException = class(Exception)
-  end;
-
-  ENullPointerException = class(ERuntimeException)
-  end;
-
-  EViolatedMandatoryConstraintException = class(ERuntimeException)
-
-  end;
 
 type
   FILE_PTR = Pointer;
@@ -191,27 +181,286 @@ Adapted from
 type
   TSize = uint64;
 
-function millis(): int64; inline;
-function millisToString(millis: int64): string;
+  TTimer = uint64;
+
+  { TTimerHelper }
+
+  TTimerHelper = type helper for TTimer
+    procedure restart;
+    function elapsed: TTimer;
+    function toString: string;
+  end;
+
+
+function millis(): TTimer;
+function millisToString(millis: TTimer): string;
+
+type
+  EError = class(Exception)
+  end;
+
+  EInternalError = class(Exception)
+  end;
+
+  EException = class(Exception)
+  protected
+    FCause: Exception;
+  public
+    constructor Create; overload;
+    property Cause: Exception read FCause write FCause;
+  end;
+
+  EClassNotFoundException = class(EException)
+  end;
+
+  ECloneNotSupportedException = class(EException)
+  end;
+
+  EIllegalAccessException = class(EException)
+  end;
+
+  EInstantiationException = class(EException)
+  end;
+
+  EInterruptedException = class(EException)
+  end;
+
+  ENoSuchFieldException = class(EException)
+  end;
+
+  ENoSuchMethodException = class(EException)
+  end;
+
+  ERuntimeException = class(EException)
+  end;
+
+  EArithmeticException = class(ERuntimeException)
+  end;
+
+  EArrayStoreException = class(ERuntimeException)
+  end;
+
+  EClassCastException = class(ERuntimeException)
+  end;
+
+  EIllegalArgumentException = class(ERuntimeException)
+  end;
+
+  EIllegalThreadStateException = class(EIllegalArgumentException)
+  end;
+
+  ENumberFormatException = class(EIllegalArgumentException)
+  public
+    class function forInputString(s: string): ENumberFormatException;
+  end;
+
+  EIllegalMonitorStateException = class(ERuntimeException)
+  end;
+
+  EIllegalStateException = class(ERuntimeException)
+  end;
+
+  EIndexOutOfBoundsException = class(ERuntimeException)
+  public
+    constructor Create; overload; virtual;
+    constructor Create(index: longint); overload; virtual;
+  end;
+
+  EArrayIndexOutOfBoundsException = class(EIndexOutOfBoundsException)
+  end;
+
+  EStringIndexOutOfBoundsException = class(EIndexOutOfBoundsException)
+  end;
+
+  EThreadDeath = class(ERuntimeException)
+  end;
+
+  ENegativeArraySizeException = class(ERuntimeException)
+  end;
+
+  ENullPointerException = class(ERuntimeException)
+  end;
+
+  ESecurityException = class(ERuntimeException)
+  end;
+
+  EUnsupportedOperationException = class(ERuntimeException)
+  end;
+
+  EConcurrentModificationException = class(ERuntimeException)
+  end;
+
+  EEmptyStackException = class(ERuntimeException)
+  end;
+
+  EMissingResourceException = class(ERuntimeException)
+  end;
+
+  ENoSuchElementException = class(ERuntimeException)
+  end;
+
+  ETooManyListenersException = class(ERuntimeException)
+  end;
+
+  EIOException = class(EException)
+  public
+    class function getOSException(code: longint): EIOException;
+  end;
+
+  ECharConversionException = class(EIOException)
+  end;
+
+  EEOFException = class(EIOException)
+  end;
+
+  EFileNotFoundException = class(EIOException)
+  end;
+
+  EInterruptedIOException = class(EIOException)
+  end;
+
+  EObjectStreamException = class(EIOException)
+  end;
+
+  EInvalidClassException = class(EIOException)
+  end;
+
+  EInvalidObjectException = class(EIOException)
+  end;
+
+  ENotActiveException = class(EIOException)
+  end;
+
+  ENotSerializableException = class(EIOException)
+  end;
+
+  EOptionalDataException = class(EIOException)
+  end;
+
+  EStreamCorruptedException = class(EIOException)
+  end;
+
+  EWriteAbortedException = class(EIOException)
+  end;
+
+  ESyncFailedException = class(EIOException)
+  end;
+
+  EUnsupportedEncodingException = class(EIOException)
+  end;
+
+  EUTFDataFormatException = class(EIOException)
+  end;
+
+  EViolatedMandatoryConstraintException = class(ERuntimeException)
+  end;
+
+  ESQLException = class(EIOException)
+  private
+    FVendorCode: integer;
+    FSQLState: string;
+    FNextException: ESQLException;
+    procedure SetNextException(const Value: ESQLException);
+  public
+    constructor Create(reason: string; const SQLState: string = ''; const vendorCode: integer = 0);
+    property SQLState: string read FSQLState;
+    property VendorCode: integer read FVendorCode;
+    property NextException: ESQLException read FNextException write SetNextException;
+  end;
 
 implementation
 
 uses
+  {$IFDEF WINDOWS}
+  Windows,
+  {$ELSE}
+  {$IFDEF UNIX}UnixType, Linux,{$ENDIF}
+  {$ENDIF}
   dynlibs;
 
-function millis(): int64;
+type
+  TOS = record
+    procedure init;
+    function currentTimeMillis: uint64;
+  end;
+
 var
-  D: double;
+  OS: TOS;
+
+  {$I md_paxutils.inc}
+
+  { EIndexOutOfBoundsException }
+
+constructor EIndexOutOfBoundsException.Create;
 begin
-  D := now * single(MSecsPerDay);
-  if D < 0 then
-    D := D - 0.5
-  else
-    D := D + 0.5;
-  Result := trunc(D);
+  inherited Create('');
 end;
 
-function millisToString(millis: int64): string;
+constructor EIndexOutOfBoundsException.Create(index: longint);
+begin
+  inherited Create(IntToStr(index));
+end;
+{ ENumberFormatException }
+
+class function ENumberFormatException.forInputString(s: string): ENumberFormatException;
+begin
+  Result := ENumberFormatException.Create('For input string: "' + s + '"');
+end;
+
+{ EIOException }
+
+class function EIOException.getOSException(code: longint): EIOException;
+begin
+  Result := EIOException.Create(SysErrorMessage(code));
+end;
+
+{ ESQLException }
+
+constructor ESQLException.Create(reason: string; const SQLState: string; const vendorCode: integer);
+begin
+  inherited Create(reason);
+  FVendorCode := vendorCode;
+  FSQLState := SQLState;
+end;
+
+procedure ESQLException.SetNextException(const Value: ESQLException);
+begin
+  FNextException := Value;
+end;
+
+{ EException }
+
+constructor EException.Create;
+begin
+  inherited Create('');
+end;
+
+{ TTimerHelper }
+
+procedure TTimerHelper.restart;
+begin
+  self := millis();
+end;
+
+function TTimerHelper.elapsed: TTimer;
+var
+  t: TTimer;
+begin
+  t := millis();
+  Result := t - self;
+end;
+
+function TTimerHelper.toString: string;
+begin
+  Result := millisToString(self);
+end;
+
+function millis(): TTimer;
+begin
+  Result := OS.currentTimeMillis();
+end;
+
+function millisToString(millis: TTimer): string;
 var
   h: word = 0;
   m: word = 0;
@@ -537,13 +786,13 @@ var
   task: TTask;
 begin
   Result := 0;
-  for task in self do
-  begin
-    try
+  try
+    for task in self do
+    begin
       if not task.Finished then
         InterLockedIncrement(Result);
-    except
     end;
+  except
   end;
 end;
 
@@ -556,7 +805,7 @@ const
     '0', '1', '2', '3', '4', '5', '6', '7',
     '8', '9', 'A', 'B', 'C', 'D', 'E', 'F');
 
-{ TProperties }
+  { TProperties }
 
 constructor TProperties.Create;
 begin
@@ -782,7 +1031,6 @@ var
   len, x: longint;
   outBuffer: ansistring;
   achar: widechar;
-
 begin
   outBuffer := '';
   len := length(theString);
@@ -892,6 +1140,7 @@ end;
 function TProperties.getProperty(const key: ansistring; const defaultValue: ansistring): ansistring;
 begin
   Result := FValues.Values[key];
+  System.writeln(key, ':', Result);
   if Result = '' then
   begin
     if assigned(FDefaults) then
@@ -1093,5 +1342,7 @@ end;
 
 
 initialization
+
+  OS.init;
 
 end.

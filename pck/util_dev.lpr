@@ -3,20 +3,25 @@ program util_dev;
 {$mode objfpc}{$H+}
 {$DEFINE UseCThreads}
 
-uses {$IFDEF UNIX} {$IFDEF UseCThreads}
-  cthreads, {$ENDIF} {$ENDIF}
+uses
+  {$IFDEF UNIX} {$IFDEF UseCThreads}cthreads,{$ENDIF}{$ENDIF}
   Classes,
   SysUtils,
   CustApp,
   Crt,
-  paxutils { you can add units after this };
+  {$IfDef Windows}
+  Windows,
+  {$EndIf}
+  paxutils,
+  paxutils.batch,
+  paxutils.designpatterns,
+  paxutils.containers;
 
 type
-
   { TLockThread }
 
   TLockThread = class(TThread)
-  var
+  protected
     Semaphore: TSemaphore;
   public
     procedure Execute; override;
@@ -25,7 +30,7 @@ type
   { TWaitThread }
 
   TWaitThread = class(TThread)
-  var
+  protected
     Semaphore: TSemaphore;
   public
     procedure Execute; override;
@@ -34,11 +39,9 @@ type
 
   TUtilsDev = class(TCustomApplication)
   protected
-  var
-    FSemaphore: TSemaphore;
-    FWaiter: TWaitThread;
+    fSemaphore: TSemaphore;
+    fWaiter: TWaitThread;
     fLocker: TLockThread;
-
     procedure DoRun; override;
   public
     procedure AfterConstruction; override;
@@ -52,14 +55,14 @@ type
     Writeln('TWaitThread: Wait the green');
     try
       Semaphore.acquire();
-      Semaphore.release();
+      Semaphore.Release();
     except
       ON E: ESemaphoreException do
       begin
         Writeln(E.Message);
       end;
     end;
-    Writeln('TWaitThread: Byte');
+    Writeln('TWaitThread: Bye');
   end;
 
   { TLockThread }
@@ -70,36 +73,36 @@ type
   begin
     Writeln('TLockThread: Semaphore RED, keep red for ', waitTime div 1000, ' seconds (', waitTime div (1000 * 60), ' minutes)');
     Semaphore.acquire();
-    while waitTime > 0 do
-    begin
-      sleep(1);
-      Dec(waitTime);
-    end;
-    Semaphore.release();
+    sleep(waitTime);
+    Semaphore.Release();
     Writeln('TLockThread:  Semaphore GREEN Bye');
   end;
 
   { TUtilsDev }
 
   procedure TUtilsDev.DoRun;
+  var
+    t: TTimer = 0;
   begin
+    t.restart;
     Writeln;
     repeat
       Sleep(100);
     until not FSemaphore.isInUsed;
-    Writeln('Exit');
+    Writeln('Exit after ', t.elapsed.toString);
+    Writeln('Press any key to terminate');
+    ReadKey;
     Terminate(0);
   end;
 
   procedure TUtilsDev.AfterConstruction;
   begin
     inherited AfterConstruction;
-    FSemaphore        := TMutex.Create;
-    fLocker           := TLockThread.Create(True);
+    FSemaphore := TMutex.Create;
+    fLocker := TLockThread.Create(True);
     fLocker.Semaphore := FSemaphore;
     fLocker.Start;
     FWaiter := TWaitThread.Create(True);
-
     FWaiter.Semaphore := FSemaphore;
     FWaiter.Start;
   end;
@@ -114,11 +117,17 @@ type
     inherited BeforeDestruction;
   end;
 
+type
+  TDoubleStringMap = specialize TAbstractMap<string, string>;
+  TStringObjectMap = specialize TAbstractMap<string, TObject>;
+  TObjectStringMap = specialize TAbstractMap<TObject, string>;
+
 
 var
   Application: TUtilsDev;
+
 begin
-  Application       := TUtilsDev.Create(nil);
+  Application := TUtilsDev.Create(nil);
   Application.Title := 'UtilsDevApplication';
   Application.Run;
   Application.Free;
