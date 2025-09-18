@@ -4,6 +4,7 @@
     <PathDelim Value="\"/>
     <Name Value="paxutils_package"/>
     <Type Value="RunAndDesignTime"/>
+    <AddToProjectUsesSection Value="True"/>
     <CompilerOptions>
       <Version Value="11"/>
       <PathDelim Value="\"/>
@@ -11,45 +12,27 @@
         <OtherUnitFiles Value="..\src;..\src\$(TargetOS)"/>
         <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\fpc-$(FPC_FULLVERSION)"/>
       </SearchPaths>
+      <CodeGeneration>
+        <Optimizations>
+          <OptimizationLevel Value="0"/>
+        </Optimizations>
+      </CodeGeneration>
     </CompilerOptions>
-    <Files Count="7">
+    <Files Count="2">
       <Item1>
         <Filename Value="..\src\paxutils.pas"/>
         <UnitName Value="paxutils"/>
       </Item1>
       <Item2>
-        <Filename Value="..\src\paxutils.designpatterns.pas"/>
-        <UnitName Value="paxutils.designpatterns"/>
+        <Filename Value="..\src\paxutils.colors.pas"/>
+        <UnitName Value="paxutils.colors"/>
       </Item2>
-      <Item3>
-        <Filename Value="..\src\paxutils.chartjs.org.pas"/>
-        <UnitName Value="paxutils.chartjs.org"/>
-      </Item3>
-      <Item4>
-        <Filename Value="..\src\paxutils.batch.pas"/>
-        <UnitName Value="paxutils.batch"/>
-      </Item4>
-      <Item5>
-        <Filename Value="..\src\paxutils.persistence.pas"/>
-        <UnitName Value="paxutils.persistence"/>
-      </Item5>
-      <Item6>
-        <Filename Value="..\src\paxutils.persistence.engines.pas"/>
-        <UnitName Value="paxutils.persistence.engines"/>
-      </Item6>
-      <Item7>
-        <Filename Value="..\src\paxutils.xml.dom3.pas"/>
-        <UnitName Value="paxutils.xml.dom3"/>
-      </Item7>
     </Files>
     <CompatibilityMode Value="True"/>
-    <RequiredPkgs Count="2">
+    <RequiredPkgs Count="1">
       <Item1>
         <PackageName Value="paxtypes_package"/>
       </Item1>
-      <Item2>
-        <PackageName Value="LCLBase"/>
-      </Item2>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

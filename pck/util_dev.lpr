@@ -1,6 +1,6 @@
 program util_dev;
 
-{$mode objfpc}{$H+}
+{$Mode ObjFPC}{$H+}
 {$DEFINE UseCThreads}
 
 uses
@@ -12,10 +12,9 @@ uses
   {$IfDef Windows}
   Windows,
   {$EndIf}
+  Interfaces,
   paxutils,
-  paxutils.batch,
-  paxutils.designpatterns,
-  paxutils.containers;
+  paxutils_package;
 
 type
   { TLockThread }
@@ -71,7 +70,8 @@ type
   var
     waitTime: word = 1000;
   begin
-    Writeln('TLockThread: Semaphore RED, keep red for ', waitTime div 1000, ' seconds (', waitTime div (1000 * 60), ' minutes)');
+    Writeln('TLockThread: Semaphore RED, keep red for ', waitTime div
+      1000, ' seconds (', waitTime div (1000 * 60), ' minutes)');
     Semaphore.acquire();
     sleep(waitTime);
     Semaphore.Release();
@@ -117,18 +117,14 @@ type
     inherited BeforeDestruction;
   end;
 
-type
-  TDoubleStringMap = specialize TAbstractMap<string, string>;
-  TStringObjectMap = specialize TAbstractMap<string, TObject>;
-  TObjectStringMap = specialize TAbstractMap<TObject, string>;
-
-
 var
   Application: TUtilsDev;
 
 begin
+
   Application := TUtilsDev.Create(nil);
   Application.Title := 'UtilsDevApplication';
   Application.Run;
   Application.Free;
+
 end.

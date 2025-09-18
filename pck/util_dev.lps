@@ -9,11 +9,11 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\$(TargetCPU)-$(TargetOS)\util_dev"/>
+            <Filename Value="..\bin\$(TargetCPU)-$(TargetOS)-$(fpc_fullversion)\util_dev"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\src;..\src\$(TargetOS)"/>
+            <OtherUnitFiles Value="..\src\$(TargetOS)"/>
             <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -29,6 +29,9 @@
               <StackChecks Value="True"/>
             </Checks>
             <VerifyObjMethodCallValidity Value="True"/>
+            <Optimizations>
+              <OptimizationLevel Value="0"/>
+            </Optimizations>
           </CodeGeneration>
           <Linking>
             <Debugging>
@@ -44,233 +47,291 @@
         </CompilerOptions>
       </Item1>
     </BuildModes>
-    <Units Count="23">
+    <Units Count="38">
       <Unit0>
         <Filename Value="util_dev.lpr"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos X="26" Y="15"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="36"/>
+        <CursorPos X="46" Y="45"/>
         <UsageCount Value="255"/>
         <Loaded Value="True"/>
       </Unit0>
       <Unit1>
+        <Filename Value="..\src\dev\main.view.pas"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="36" Y="11"/>
+        <UsageCount Value="216"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="..\src\paxtibi.lua.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="57"/>
+        <CursorPos X="38" Y="70"/>
+        <UsageCount Value="297"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="..\..\paxgl\src\pax.gl.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1556"/>
+        <CursorPos Y="1418"/>
+        <UsageCount Value="104"/>
+      </Unit3>
+      <Unit4>
         <Filename Value="..\src\paxutils.arraylist.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="60" Y="10"/>
-        <UsageCount Value="205"/>
-      </Unit1>
-      <Unit2>
+        <UsageCount Value="53"/>
+      </Unit4>
+      <Unit5>
         <Filename Value="..\src\paxutils.linkedlist.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="36" Y="82"/>
-        <UsageCount Value="203"/>
-      </Unit2>
-      <Unit3>
-        <Filename Value="..\src\paxutils.xml.dom3.pas"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="6" Y="10"/>
-        <UsageCount Value="481"/>
-      </Unit3>
-      <Unit4>
-        <Filename Value="..\src\paxutils.persistence.pas"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="10" Y="24"/>
-        <UsageCount Value="110"/>
-      </Unit4>
-      <Unit5>
-        <Filename Value="..\src\paxutils.pas"/>
-        <EditorIndex Value="1"/>
-        <TopLine Value="364"/>
-        <CursorPos X="13" Y="390"/>
-        <UsageCount Value="103"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="51"/>
       </Unit5>
       <Unit6>
-        <Filename Value="..\src\paxutils.containers.pas"/>
+        <Filename Value="..\src\paxutils.xml.dom3.pas"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="277"/>
-        <CursorPos X="51" Y="37"/>
-        <UsageCount Value="108"/>
+        <TopLine Value="121"/>
+        <CursorPos X="44" Y="14"/>
+        <UsageCount Value="329"/>
       </Unit6>
       <Unit7>
-        <Filename Value="..\src\paxutils.designpatterns.pas"/>
+        <Filename Value="..\src\paxutils.persistence.pas"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="35"/>
-        <CursorPos X="44" Y="50"/>
-        <UsageCount Value="102"/>
+        <CursorPos X="38" Y="17"/>
+        <UsageCount Value="18"/>
       </Unit7>
       <Unit8>
-        <Filename Value="..\src\paxutils.colors.pas"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="480"/>
-        <CursorPos X="39" Y="501"/>
-        <UsageCount Value="95"/>
+        <Filename Value="..\src\paxutils.pas"/>
+        <TopLine Value="411"/>
+        <CursorPos X="42" Y="422"/>
+        <UsageCount Value="103"/>
+        <Loaded Value="True"/>
       </Unit8>
       <Unit9>
-        <Filename Value="..\src\paxutils.batch.pas"/>
+        <Filename Value="..\src\paxutils.containers.pas"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="408"/>
-        <CursorPos X="43" Y="424"/>
-        <UsageCount Value="20"/>
+        <CursorPos X="32" Y="15"/>
+        <UsageCount Value="97"/>
       </Unit9>
       <Unit10>
-        <Filename Value="D:\fpcupdeluxe\fpcsrc\rtl\objpas\objpas.pp"/>
+        <Filename Value="..\src\paxutils.designpatterns.pas"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="481"/>
-        <CursorPos X="24" Y="529"/>
-        <UsageCount Value="1"/>
+        <TopLine Value="34"/>
+        <CursorPos X="3" Y="51"/>
+        <UsageCount Value="195"/>
       </Unit10>
       <Unit11>
-        <Filename Value="..\src\paxutils.persistence.engines.pas"/>
+        <Filename Value="..\src\paxutils.batch.pas"/>
         <EditorIndex Value="-1"/>
-        <CursorPos X="10" Y="12"/>
-        <UsageCount Value="11"/>
+        <CursorPos X="47" Y="9"/>
+        <UsageCount Value="116"/>
       </Unit11>
       <Unit12>
-        <Filename Value="D:\fpcupdeluxe\fpcsrc\rtl\objpas\sysutils\datih.inc"/>
+        <Filename Value="..\src\paxutils.persistence.engines.pas"/>
         <EditorIndex Value="-1"/>
-        <CursorPos X="4" Y="34"/>
-        <UsageCount Value="3"/>
+        <CursorPos X="47" Y="18"/>
+        <UsageCount Value="14"/>
       </Unit12>
       <Unit13>
-        <Filename Value="..\src\windows\md_paxutils.inc"/>
+        <Filename Value="..\src\paxutils.chartjs.org.pas"/>
         <EditorIndex Value="-1"/>
-        <CursorPos X="31" Y="27"/>
-        <UsageCount Value="7"/>
+        <TopLine Value="247"/>
+        <CursorPos Y="9"/>
+        <UsageCount Value="124"/>
       </Unit13>
       <Unit14>
-        <Filename Value="..\src\unix\md_paxutils.inc"/>
+        <Filename Value="D:\fpcupdeluxe\fpcsrc\rtl\win64\classes.pp"/>
+        <UnitName Value="Classes"/>
         <EditorIndex Value="-1"/>
-        <CursorPos Y="24"/>
-        <UsageCount Value="7"/>
+        <TopLine Value="66"/>
+        <CursorPos X="38" Y="21"/>
+        <UsageCount Value="124"/>
       </Unit14>
       <Unit15>
-        <Filename Value="D:\fpcupdeluxe\fpcsrc\rtl\inc\objpash.inc"/>
+        <Filename Value="D:\fpcupdeluxe\fpcsrc\rtl\objpas\classes\classes.inc"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="83"/>
-        <CursorPos X="8" Y="107"/>
-        <UsageCount Value="1"/>
+        <UsageCount Value="124"/>
       </Unit15>
       <Unit16>
-        <Filename Value="D:\fpcupdeluxe\fpcsrc\rtl\win\systhrd.inc"/>
+        <Filename Value="D:\fpcupdeluxe\fpcsrc\rtl\win\sysutils.pp"/>
+        <UnitName Value="SysUtils"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="525"/>
-        <CursorPos X="18" Y="545"/>
-        <UsageCount Value="1"/>
+        <TopLine Value="22"/>
+        <UsageCount Value="124"/>
       </Unit16>
       <Unit17>
-        <Filename Value="D:\fpcupdeluxe\fpcsrc\rtl\objpas\classes\classesh.inc"/>
+        <Filename Value="D:\fpcupdeluxe\fpcsrc\rtl\win\sysdlh.inc"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="715"/>
-        <CursorPos X="21" Y="744"/>
-        <UsageCount Value="10"/>
+        <CursorPos X="3" Y="18"/>
+        <UsageCount Value="123"/>
       </Unit17>
       <Unit18>
-        <Filename Value="D:\fpcupdeluxe\fpcsrc\rtl\objpas\classes\persist.inc"/>
+        <Filename Value="D:\fpcupdeluxe\fpcsrc\packages\rtl-objpas\src\inc\rtti.pp"/>
+        <UnitName Value="Rtti"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="146"/>
-        <CursorPos X="3" Y="148"/>
-        <UsageCount Value="10"/>
+        <TopLine Value="343"/>
+        <CursorPos X="42" Y="354"/>
+        <UsageCount Value="122"/>
       </Unit18>
       <Unit19>
-        <Filename Value="D:\fpcupdeluxe\fpcsrc\rtl\go32v2\dpmiexcp.pp"/>
-        <UnitName Value="DpmiExcp"/>
+        <Filename Value="D:\fpcupdeluxe\fpcsrc\packages\opengl\src\gl.pp"/>
+        <UnitName Value="GL"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="1606"/>
-        <CursorPos X="16" Y="1646"/>
-        <UsageCount Value="10"/>
+        <TopLine Value="1459"/>
+        <CursorPos X="75" Y="1479"/>
+        <UsageCount Value="103"/>
       </Unit19>
       <Unit20>
-        <Filename Value="..\..\..\projects\j2p\src\j2p.javaclass.sql.pas"/>
+        <Filename Value="..\src\paxutils.designpatterns.dsgnrs.pas"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="226"/>
-        <CursorPos X="42" Y="245"/>
-        <UsageCount Value="24"/>
+        <TopLine Value="33"/>
+        <CursorPos X="48" Y="46"/>
+        <UsageCount Value="14"/>
       </Unit20>
       <Unit21>
-        <Filename Value="..\..\paxtypes\pck\paxtypes_package.pas"/>
-        <EditorIndex Value="3"/>
-        <CursorPos Y="14"/>
-        <UsageCount Value="11"/>
-        <Loaded Value="True"/>
+        <Filename Value="paxutils_package.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="37" Y="18"/>
+        <UsageCount Value="14"/>
       </Unit21>
       <Unit22>
-        <Filename Value="..\src\md_paxutils.inc"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="2"/>
-        <CursorPos X="31" Y="6"/>
+        <Filename Value="D:\fpcupdeluxe\lazarus\components\ideintf\propedits.pp"/>
+        <UnitName Value="PropEdits"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="349"/>
+        <CursorPos X="14" Y="365"/>
+        <UsageCount Value="99"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="D:\fpcupdeluxe\lazarus\lcl\extctrls.pp"/>
+        <UnitName Value="ExtCtrls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="951"/>
+        <CursorPos X="17" Y="965"/>
+        <UsageCount Value="97"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="D:\fpcupdeluxe\lazarus\lcl\include\customlabelededit.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="110"/>
+        <CursorPos X="3" Y="130"/>
+        <UsageCount Value="97"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="D:\fpcupdeluxe\lazarus\lcl\include\boundlabel.inc"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="3" Y="20"/>
+        <UsageCount Value="97"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="D:\fpcupdeluxe\lazarus\lcl\controls.pp"/>
+        <UnitName Value="Controls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="2740"/>
+        <CursorPos X="11" Y="2753"/>
+        <UsageCount Value="96"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="D:\fpcupdeluxe\fpcsrc\rtl\objpas\typinfo.pp"/>
+        <UnitName Value="TypInfo"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1256"/>
+        <CursorPos X="11" Y="1273"/>
+        <UsageCount Value="104"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="..\src\paxutils.colors.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="511"/>
+        <CursorPos X="46" Y="521"/>
+        <UsageCount Value="103"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="..\src\paxutils.security.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="42" Y="17"/>
+        <UsageCount Value="2"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="D:\fpcupdeluxe\fpcsrc\rtl\objpas\sysutils\sysutilh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="82"/>
+        <CursorPos X="10" Y="104"/>
+        <UsageCount Value="2"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="..\..\paxtypes\pck\paxtypes_package.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="46" Y="15"/>
+        <UsageCount Value="10"/>
+      </Unit31>
+      <Unit32>
+        <Filename Value="d:\programmi\lazarus-3.0\packager\registration\lazaruspackageintf.pas"/>
+        <UnitName Value="LazarusPackageIntf"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="10"/>
+      </Unit32>
+      <Unit33>
+        <Filename Value="..\..\paxtypes\src\paxtypes.pas"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="10"/>
+      </Unit33>
+      <Unit34>
+        <Filename Value="..\..\paxtypes\src\includes\BooleanTypeDec.inc"/>
+        <EditorIndex Value="-1"/>
+        <UsageCount Value="10"/>
+      </Unit34>
+      <Unit35>
+        <Filename Value="..\..\paxbatch\src\paxutils.batch.pas"/>
+        <EditorIndex Value="1"/>
+        <CursorPos X="39" Y="11"/>
         <UsageCount Value="10"/>
         <Loaded Value="True"/>
-      </Unit22>
+      </Unit35>
+      <Unit36>
+        <Filename Value="..\..\paxbatch\src\paxutils.persistence.pas"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="205"/>
+        <CursorPos X="52" Y="16"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit36>
+      <Unit37>
+        <Filename Value="..\..\paxbatch\src\paxutils.persistence.engines.pas"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="7"/>
+        <CursorPos X="39" Y="17"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit37>
     </Units>
-    <JumpHistory Count="17" HistoryIndex="16">
+    <JumpHistory Count="5" HistoryIndex="4">
       <Position1>
-        <Filename Value="util_dev.lpr"/>
-        <Caret Line="126" Column="70" TopLine="95"/>
+        <Filename Value="..\src\paxutils.pas"/>
+        <Caret Line="245" Column="10" TopLine="227"/>
       </Position1>
       <Position2>
-        <Filename Value="util_dev.lpr"/>
-        <Caret Line="19" Column="41"/>
+        <Filename Value="..\src\paxutils.pas"/>
+        <Caret Line="520" Column="3" TopLine="513"/>
       </Position2>
       <Position3>
         <Filename Value="..\src\paxutils.pas"/>
-        <Caret Line="195" Column="11" TopLine="169"/>
+        <Caret Line="252" Column="45" TopLine="227"/>
       </Position3>
       <Position4>
         <Filename Value="..\src\paxutils.pas"/>
-        <Caret Line="391" Column="41" TopLine="369"/>
+        <Caret Line="237" Column="34" TopLine="227"/>
       </Position4>
       <Position5>
         <Filename Value="..\src\paxutils.pas"/>
-        <Caret Line="390" Column="17" TopLine="369"/>
+        <Caret Line="422" Column="42" TopLine="411"/>
       </Position5>
-      <Position6>
-        <Filename Value="..\src\paxutils.pas"/>
-        <Caret Line="388" Column="33" TopLine="369"/>
-      </Position6>
-      <Position7>
-        <Filename Value="..\src\paxutils.pas"/>
-        <Caret Line="2" Column="17"/>
-      </Position7>
-      <Position8>
-        <Filename Value="..\src\paxutils.pas"/>
-        <Caret Line="390" Column="8" TopLine="369"/>
-      </Position8>
-      <Position9>
-        <Filename Value="..\src\paxutils.pas"/>
-        <Caret Line="390" Column="4"/>
-      </Position9>
-      <Position10>
-        <Filename Value="..\src\paxutils.pas"/>
-        <Caret Line="391" Column="44" TopLine="367"/>
-      </Position10>
-      <Position11>
-        <Filename Value="..\src\paxutils.pas"/>
-        <Caret Line="390" Column="34" TopLine="367"/>
-      </Position11>
-      <Position12>
-        <Filename Value="..\..\paxtypes\pck\paxtypes_package.pas"/>
-        <Caret Line="14" Column="44"/>
-      </Position12>
-      <Position13>
-        <Filename Value="..\src\paxutils.pas"/>
-        <Caret Line="390" Column="4" TopLine="372"/>
-      </Position13>
-      <Position14>
-        <Filename Value="util_dev.lpr"/>
-        <Caret Line="15" Column="26"/>
-      </Position14>
-      <Position15>
-        <Filename Value="..\src\paxutils.pas"/>
-        <Caret Line="389" Column="54" TopLine="372"/>
-      </Position15>
-      <Position16>
-        <Filename Value="..\src\paxutils.pas"/>
-        <Caret Line="390" Column="23" TopLine="372"/>
-      </Position16>
-      <Position17>
-        <Filename Value="..\src\paxutils.pas"/>
-        <Caret Line="392" Column="22" TopLine="372"/>
-      </Position17>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>
@@ -283,22 +344,14 @@
     </HistoryLists>
   </ProjectSession>
   <Debugging>
-    <Watches>
+    <BreakPoints>
       <Item>
-        <Expression Value="wt"/>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="..\src\paxutils.containers.pas"/>
+        <Line Value="949"/>
       </Item>
-      <Item>
-        <Expression Value="self"/>
-      </Item>
-      <Item>
-        <Expression Value="t"/>
-      </Item>
-      <Item>
-        <Expression Value="millis"/>
-      </Item>
-      <Item>
-        <Expression Value="Result"/>
-      </Item>
-    </Watches>
+    </BreakPoints>
   </Debugging>
 </CONFIG>

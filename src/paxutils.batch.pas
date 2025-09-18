@@ -103,7 +103,7 @@ type
 
   { TAbstractItemReader }
 
-  TAbstractItemReader<TItemType> = class(TInterfacedObject, IItemReader<TItemType>)
+  TAbstractItemReader<TItemType> = class(TInterfacedPersistent, IItemReader<TItemType>)
   private
     FListener: IItemReaderListener;
     FSkip: integer;
@@ -123,7 +123,7 @@ type
 
   { TAbstractItemWriter }
 
-  TAbstractItemWriter<TItemType> = class(TInterfacedObject, IItemWriter<TItemType>)
+  TAbstractItemWriter<TItemType> = class(TInterfacedPersistent, IItemWriter<TItemType>)
   private
     FListener: IItemWriterListener;
     function GetListener: IItemWriterListener;
@@ -138,14 +138,14 @@ type
 
   { TAbstractProcessor }
 
-  TAbstractProcessor<TInputType, TOutputType> = class(TInterfacedObject, IItemProcessor<TInputType, TOutputType>)
+  TAbstractProcessor<TInputType, TOutputType> = class(TInterfacedPersistent, IItemProcessor<TInputType, TOutputType>)
   public
     function process(const aIntput: TInputType): TOutputType; virtual; abstract;
   end;
 
   { TAbstractStep }
 
-  TAbstractStep<TInputType, TOutputType> = class(TInterfacedObject, IStep<TInputType, TOutputType>)
+  TAbstractStep<TInputType, TOutputType> = class(TInterfacedPersistent, IStep<TInputType, TOutputType>)
   protected
     FItemProcessor: IItemProcessor<TInputType, TOutputType>;
     FItemReader: IItemReader<TInputType>;
@@ -266,8 +266,8 @@ type
 
   TStringAbstractItemProcessor<OutputItem> = class(TAbstractProcessor<string, OutputItem>, IStringProcessor<OutputItem>)
   protected
-    function Next(var cursor: PChar; separator: char = ','): string;
-    function NextInt(var cursor: PChar; separator: char = ','): int64;
+    function Next(var cursor: pchar; separator: char = ','): string;
+    function NextInt(var cursor: pchar; separator: char = ','): int64;
   public
   end;
 
@@ -281,12 +281,12 @@ type
 
   TSplitCSVItemProcessor = class(TStringAbstractItemProcessor<TStringArray>)
   private
-    FCSVSeparatorChar: char;
-    procedure SetCSVSeparatorChar(AValue: char);
+    FSeparatorChar: char;
+    procedure SetSeparatorChar(AValue: char);
   public
     function process(const aIntput: string): TStringArray; override;
   published
-    property CSVSeparatorChar: char read FCSVSeparatorChar write SetCSVSeparatorChar;
+    property SeparatorChar: char read FSeparatorChar write SetSeparatorChar;
   end;
 
   { TItemReaderListener }
@@ -322,7 +322,8 @@ type
 
   { TItemMultiWriter }
 
-  TItemMultiWriter<TItemType> = class(TAbstractItemWriter<TItemType>, IItemMultiWriter<TItemType>, IItemWriterListener)
+  TItemMultiWriter<TItemType> = class(TAbstractItemWriter<TItemType>,
+    IItemMultiWriter<TItemType>, IItemWriterListener)
   protected
   type
     TDelegateList = TFPGList<IItemWriter<TItemType>>;
@@ -386,10 +387,9 @@ type
     { TInternalThread }
 
     TInternalThread = class(TThread)
-    private
-      procedure SetOwner(AValue: TExecutor);
     protected
       FOwner: TExecutor;
+      procedure SetOwner(AValue: TExecutor);
     public
       procedure Execute; override;
       property Owner: TExecutor read FOwner write SetOwner;
@@ -584,7 +584,7 @@ end;
 
 { TStringAbstractItemProcessor }
 
-function TStringAbstractItemProcessor<OutputItem>.Next(var cursor: PChar; separator: char): string;
+function TStringAbstractItemProcessor<OutputItem>.Next(var cursor: pchar; separator: char): string;
 begin
   Result := '';
   while (cursor^ <> #0) do
@@ -633,7 +633,7 @@ begin
 
 end;
 
-function TStringAbstractItemProcessor<OutputItem>.NextInt(var cursor: PChar; separator: char): int64;
+function TStringAbstractItemProcessor<OutputItem>.NextInt(var cursor: pchar; separator: char): int64;
 begin
   Result := StrToInt64(Next(cursor, separator));
 end;
@@ -660,22 +660,22 @@ end;
 
 { TSplitCSVItemProcessor }
 
-procedure TSplitCSVItemProcessor.SetCSVSeparatorChar(AValue: char);
+procedure TSplitCSVItemProcessor.SetSeparatorChar(AValue: char);
 begin
-  if FCSVSeparatorChar = AValue then Exit;
-  FCSVSeparatorChar := AValue;
+  if FSeparatorChar = AValue then Exit;
+  FSeparatorChar := AValue;
 end;
 
 function TSplitCSVItemProcessor.process(const aIntput: string): TStringArray;
 var
-  cursor: PChar;
+  cursor: pchar;
 begin
   cursor := PChar(aIntput);
   SetLength(Result, 0);
   while cursor^ <> #0 do
   begin
     SetLength(Result, Length(Result) + 1);
-    Result[High(Result)] := Next(cursor, FCSVSeparatorChar);
+    Result[High(Result)] := Next(cursor, FSeparatorChar);
   end;
 end;
 
@@ -1362,7 +1362,11 @@ begin
       if chunk.ready then
       begin
         writer.Write(chunk);
-        Writeln('   ', FName: 50, ' Step Chunk C:', chunk.getCapacity: 10, ' R:', reader.Listener.Count: 10, '-> W', writer.Listener.Count: 10, '(T-R:', reader.Listener.totalCount: 10, ':: T-W:', writer.Listener.totalCount: 10, ') in ', millisToString(timer.elapsed), ' millis');
+        Writeln('   ', FName: 50, ' Step Chunk C:', chunk.getCapacity: 10,
+          ' R:', reader.Listener.Count: 10, '-> W', writer.Listener.Count: 10,
+          '(T-R:', reader.Listener.totalCount: 10, ':: T-W:',
+          writer.Listener.totalCount: 10,
+          ') in ', millisToString(timer.elapsed), ' millis');
         FreeAndNil(chunk);
         chunk := TBaseChunk<TOutputType>.Create(FChunkSize);
       end;
@@ -1370,7 +1374,9 @@ begin
   until done;
   if chunk.Count > 0 then
     writer.Write(chunk);
-  Writeln(FName: 50, ' Step Done T-R:', reader.Listener.totalCount: 10, '-> T-W:', writer.Listener.totalCount: 10, ' in ', millisToString(totalTimer.elapsed));
+  Writeln(FName: 50, ' Step Done T-R:', reader.Listener.totalCount: 10,
+    '-> T-W:', writer.Listener.totalCount: 10, ' in ',
+    millisToString(totalTimer.elapsed));
   FreeAndNil(chunk);
   reader.Close;
   writer.Close;

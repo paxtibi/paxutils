@@ -1,13 +1,16 @@
 unit paxutils;
 
-{$mode objfpc}{$H+}
+{$mode delphi}{$H+}
 {$M+}
 {$ModeSwitch typehelpers}
 {$ModeSwitch advancedrecords}
-{$If FPC_FULLVERSION >= 30301 }
+{$If FPC_FULLVERSION >= 30301}
 {$ModeSwitch prefixedattributes}
+{$Define HAS_ATTRIBUTE}
 {$EndIf}
+{$ModeSwitch DUPLICATELOCALS+}
 {$INLINE ON}
+
 interface
 
 uses
@@ -22,36 +25,72 @@ const
   CompareLessThan = Low(TCompareResult);
   CompareGreaterThan = High(TCompareResult);
 
+  LIB_ERROR = {$IFDEF UNIX} nil {$ELSE} 0 {$ENDIF};
 
 type
   FILE_PTR = Pointer;
   { TMangagedLibrary }
 
-  TMangagedLibrary = class(TInterfacedObject)
+  TMangagedLibrary = class abstract(TPersistent)
   protected
     FHandle: THandle;
     FLocations: TStringList;
     FLibraryName: string;
     FBindedToLocation: string;
+    {$IfDef has_attribute}
+    FUseAttribute: boolean;
+  {$EndIf}
   protected
+    {$IfDef has_attribute}
     procedure bindEntries; virtual;
-    function getProcAddress(entryName: rawbytestring; mandatory: boolean = True): Pointer;
+  {$Else}
+    procedure bindEntries; virtual; abstract;
+  {$EndIf}
+    function getProcAddress(entryName: rawbytestring; mandatory: boolean = True): Pointer; overload;
+    function getProcAddress(index: integer; mandatory: boolean = True): Pointer; overload;
   protected
     procedure ensureLoaded;
     procedure mandatoryCheck(reference: Pointer; entryPointName: string);
     procedure TryLoad;
     procedure UnLoad;
   public
-    constructor Create;
+    constructor Create; reintroduce;
     destructor Destroy; override;
     procedure AddLocation(aPath: string);
     procedure removeLocation(aPath: string);
     function loaded: boolean;
-    procedure load;
+    procedure load; virtual;
+    {$IfDef has_attribute}
+  public
+    property UseAttribute: boolean read FUseAttribute write FUseAttribute;
+    {$EndIf}
   end;
 
   ESemaphoreException = class(Exception)
   end;
+
+  {$IfDef has_attribute}
+
+  { DLLEntity }
+
+  DLLEntity = class(TCustomAttribute)
+  private
+    FIndex: integer;
+    FLibraryName: string;
+    FMandatory: boolean;
+    FName: string;
+  public
+    constructor Create(aLibraryName: string; aName: string; aIndex: integer; aMandatory: boolean); overload;
+    constructor Create(aLibraryName: string; aName: string; aMandatory: boolean); overload;
+    constructor Create(aLibraryName: string; aName: string); overload;
+    property LibraryName: string read FLibraryName;
+    property Name: string read FName;
+    property Index: integer read FIndex;
+    property mandatory: boolean read FMandatory;
+  end;
+
+
+  {$EndIf}
 
 
 type
@@ -115,7 +154,7 @@ Adapted from
   end;
 
   { TTask }
-  TTasks = specialize TFPGList<TTask>;
+  TTasks = TFPGList<TTask>;
 
   { TTaskQueue }
 
@@ -174,9 +213,19 @@ Adapted from
 
   { IComparable }
 
-  generic IComparable<itemType> = interface
+  IComparable<itemType> = interface
     function compareTo(const comparable: itemType): TCompareResult;
   end;
+
+  IConverter<InputType, OutputType> = interface
+    ['{4C6C7696-3945-45AD-B5CC-6C0D3CA9DC41}']
+    function convert(i: InputType): OutputType;
+  end;
+
+  TAbstractConverter<InputType, OutputType> = class
+    function convert(i: InputType): OutputType; virtual; abstract;
+  end;
+
 
 type
   TSize = uint64;
@@ -376,7 +425,7 @@ uses
   {$ELSE}
   {$IFDEF UNIX}UnixType, Linux,{$ENDIF}
   {$ENDIF}
-  dynlibs;
+  Rtti, RttiUtils, dynlibs;
 
 type
   TOS = record
@@ -400,6 +449,7 @@ constructor EIndexOutOfBoundsException.Create(index: longint);
 begin
   inherited Create(IntToStr(index));
 end;
+
 { ENumberFormatException }
 
 class function ENumberFormatException.forInputString(s: string): ENumberFormatException;
@@ -569,11 +619,6 @@ end;
 
 { TMangagedLibrary }
 
-procedure TMangagedLibrary.bindEntries;
-begin
-
-end;
-
 constructor TMangagedLibrary.Create;
 begin
   FHandle := NilHandle;
@@ -646,12 +691,61 @@ begin
     TryLoad;
 end;
 
+
+{$IfDef HAS_ATTRIBUTE}
+procedure TMangagedLibrary.bindEntries;
+var
+  Context: TRttiContext;
+  AType: TRttiType;
+  Attribute: TCustomAttribute;
+  prop: TRttiProperty;
+  entity: DLLEntity;
+begin
+  inherited;
+  if not FUseAttribute then exit;
+  Context := TRttiContext.Create(False);
+  try
+    AType := Context.GetType(ClassInfo);
+    for prop in AType.GetProperties do
+    begin
+      if prop.IsWritable then
+        for Attribute in prop.GetAttributes do
+        begin
+          if Attribute is DLLEntity then
+          begin
+            entity := DLLEntity(Attribute);
+            if entity.Index >= 0 then
+            begin
+              prop.SetValue(self, getProcAddress(entity.Index, entity.mandatory));
+            end
+            else
+            begin
+              prop.SetValue(self, getProcAddress(entity.Name, entity.mandatory));
+            end;
+          end;
+        end;
+    end;
+  finally
+    Context.Free
+  end;
+end;
+{$EndIf}
+
 function TMangagedLibrary.getProcAddress(entryName: rawbytestring; mandatory: boolean): Pointer;
 begin
   Result := dynlibs.GetProcAddress(FHandle, entryName);
   if (Result = nil) and mandatory then
   begin
     raise EViolatedMandatoryConstraintException.CreateFmt('%s not found in %s', [entryName, FLibraryName]);
+  end;
+end;
+
+function TMangagedLibrary.getProcAddress(index: integer; mandatory: boolean): Pointer;
+begin
+  Result := dynlibs.GetProcedureAddress(FHandle, TOrdinalEntry(index));
+  if (Result = nil) and mandatory then
+  begin
+    raise EViolatedMandatoryConstraintException.CreateFmt('%d not found in %s', [index, FLibraryName]);
   end;
 end;
 
@@ -667,6 +761,29 @@ begin
     raise ENullPointerException.CreateFmt('Entry point %s not binded', [entryPointName]);
 end;
 
+{$IfDef has_attribute}
+
+{ DLLEntity }
+
+constructor DLLEntity.Create(aLibraryName: string; aName: string; aIndex: integer; aMandatory: boolean);
+begin
+  FLibraryName := aLibraryName;
+  FName := aName;
+  FIndex := aIndex;
+  FMandatory := aMandatory;
+end;
+
+constructor DLLEntity.Create(aLibraryName: string; aName: string; aMandatory: boolean);
+begin
+  Create(aLibraryName, aName, -1, aMandatory);
+end;
+
+constructor DLLEntity.Create(aLibraryName: string; aName: string);
+begin
+  Create(aLibraryName, aName, -1, True);
+end;
+
+{$EndIf}
 
 { TTask }
 
@@ -742,7 +859,7 @@ procedure TTaskQueue.add(aTask: TTask);
 begin
   inherited Add(aTask);
   ATask.ActiveQueue := self;
-  aTask.OnTerminate := @OnTaskTerminate;
+  aTask.OnTerminate := OnTaskTerminate;
   if FStarted then
     aTask.Start;
 end;
@@ -790,7 +907,7 @@ begin
     for task in self do
     begin
       if not task.Finished then
-        InterLockedIncrement(Result);
+        InterLockedIncrement(longint(Result));
     end;
   except
   end;
@@ -1332,7 +1449,7 @@ procedure TProperties.loadResource(resourceName: ansistring);
 var
   R: TResourceStream;
 const
-  resourceType: PChar = 'properties';
+  resourceType: pchar = 'properties';
 begin
   R := TResourceStream.Create(0, resourceName, resourceType);
   load(r);
@@ -1342,6 +1459,7 @@ end;
 
 
 initialization
+  {$R *.res}
 
   OS.init;
 
