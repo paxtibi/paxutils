@@ -280,7 +280,8 @@ type
 
   { TAbstractMap }
 
-  TAbstractMap<aKeyType, aValueType> = class(TInterfacedObject, IMap<aKeyType, aValueType>)
+  TAbstractMap<aKeyType, aValueType> = class(TInterfacedObject,
+    IMap<aKeyType, aValueType>)
     procedure Clear(); virtual;
     function containsKey(key: aKeyType): boolean; virtual;
     function containsValue(Value: aValueType): boolean; virtual;
@@ -299,7 +300,8 @@ type
 
   { TSimpleMapEntry }
 
-  TSimpleMapEntry<aKeyType, aValueType> = class(TInterfacedObject, IMapEntry<aKeyType, aValueType>)
+  TSimpleMapEntry<aKeyType, aValueType> = class(TInterfacedObject,
+    IMapEntry<aKeyType, aValueType>)
   protected
     fKey: aKeyType;
     fValue: aValueType;
@@ -329,7 +331,8 @@ type
 
   { THashtable }
 
-  THashtable<aKeyType, aValueType> = class(TDictionary<aKeyType, aValueType>, IMap<aKeyType, aValueType>)
+  THashtable<aKeyType, aValueType> = class(TDictionary<aKeyType,
+    aValueType>, IMap<aKeyType, aValueType>)
   protected
     FRefCount: longint;
     FDestroyCount: longint;
@@ -339,7 +342,8 @@ type
     fThreshold: int32;
     fLoadFactor: double;
   protected
-    function QueryInterface(constref iid: tguid; out obj): longint; {$IFNDEF WINDOWS} cdecl{$ELSE}stdcall{$ENDIF};
+    function QueryInterface(constref iid: tguid; out obj): longint;
+    {$IFNDEF WINDOWS} cdecl{$ELSE}stdcall{$ENDIF};
     function _AddRef: longint; {$IFNDEF WINDOWS} cdecl{$ELSE}stdcall{$ENDIF};
     function _Release: longint; {$IFNDEF WINDOWS} cdecl{$ELSE}stdcall{$ENDIF};
   public
@@ -355,15 +359,15 @@ type
     function containsKey(aKey: aKeyType): boolean; virtual;
     function containsValue(aValue: aValueType): boolean; virtual;
     function entrySet(): ISet<IMapEntry<aKeyType, aValueType>>; virtual; abstract;
-    function equals(o: IMap<aKeyType, aValueType>): boolean; virtual; abstract;
-    function get(key: aKeyType): aValueType; virtual; abstract;
+    function equals(o: IMap<aKeyType, aValueType>): boolean; reintroduce; virtual; abstract;
+    function get(key: aKeyType): aValueType; reintroduce; virtual; abstract;
     function hashCode(): THashCode; virtual; abstract;
-    function isEmpty(): boolean; virtual; abstract;
+    function isEmpty(): boolean; reintroduce; virtual; abstract;
     function keySet(): ISet<aKeyType>; virtual; abstract;
-    function put(key: aKeyType; Value: aValueType): aValueType; virtual; abstract;
+    function put(key: aKeyType; Value: aValueType): aValueType; reintroduce; virtual; abstract;
     procedure putAll(m: IMap<aKeyType, aValueType>); virtual; abstract;
-    function remove(key: aKeyType): aValueType; virtual; abstract;
-    function size(): int32; virtual; abstract;
+    function remove(key: aKeyType): aValueType; reintroduce; virtual; abstract;
+    function size(): int32; reintroduce; virtual; abstract;
     function values(): ICollection<aValueType>; virtual; abstract;
   end;
 
@@ -386,41 +390,41 @@ type
   EIndexOutOfBoundsException = class(EException)
   end;
 
-function CalculateHashCode(const aValue: int8): THashCode; overload;
-function CalculateHashCode(const aValue: int16): THashCode; overload;
-function CalculateHashCode(const aValue: int32): THashCode; overload;
-function CalculateHashCode(const aValue: int64): THashCode; overload;
+function CalculateHashCode(const aValue: int8): THashCode; overload; inline;
+function CalculateHashCode(const aValue: int16): THashCode; overload; inline;
+function CalculateHashCode(const aValue: int32): THashCode; overload; inline;
+function CalculateHashCode(const aValue: int64): THashCode; overload; inline;
 
-function CalculateHashCode(const aValue: uint8): THashCode; overload;
-function CalculateHashCode(const aValue: uint16): THashCode; overload;
-function CalculateHashCode(const aValue: uint32): THashCode; overload;
-function CalculateHashCode(const aValue: uint64): THashCode; overload;
+function CalculateHashCode(const aValue: uint8): THashCode; overload; inline;
+function CalculateHashCode(const aValue: uint16): THashCode; overload; inline;
+function CalculateHashCode(const aValue: uint32): THashCode; overload; inline;
+function CalculateHashCode(const aValue: uint64): THashCode; overload; inline;
 
-function CalculateHashCode(const aValue: single): THashCode; overload;
-function CalculateHashCode(const aValue: double): THashCode; overload;
+function CalculateHashCode(const aValue: single): THashCode; overload; inline;
+function CalculateHashCode(const aValue: double): THashCode; overload; inline;
 
-function CalculateHashCode(const aValue: ansistring): THashCode; overload;
-function CalculateHashCode(const aValue: WideString): THashCode; overload;
-function CalculateHashCode(const aValue: utf8string): THashCode; overload;
+function CalculateHashCode(const aValue: ansistring): THashCode; overload; inline;
+function CalculateHashCode(const aValue: widestring): THashCode; overload; inline;
+function CalculateHashCode(const aValue: utf8string): THashCode; overload; inline;
 
-function CalculateHashCode(const aValue: TObject): THashCode; overload;
+function CalculateHashCode(const aValue: TObject): THashCode; overload; inline;
 
-function areEquals(item1, item2: int8): boolean; overload;
-function areEquals(item1, item2: int16): boolean; overload;
-function areEquals(item1, item2: int32): boolean; overload;
-function areEquals(item1, item2: int64): boolean; overload;
+function areEquals(item1, item2: int8): boolean; overload; inline;
+function areEquals(item1, item2: int16): boolean; overload; inline;
+function areEquals(item1, item2: int32): boolean; overload; inline;
+function areEquals(item1, item2: int64): boolean; overload; inline;
 
-function areEquals(item1, item2: uint8): boolean; overload;
-function areEquals(item1, item2: uint16): boolean; overload;
-function areEquals(item1, item2: uint32): boolean; overload;
-function areEquals(item1, item2: uint64): boolean; overload;
+function areEquals(item1, item2: uint8): boolean; overload; inline;
+function areEquals(item1, item2: uint16): boolean; overload; inline;
+function areEquals(item1, item2: uint32): boolean; overload; inline;
+function areEquals(item1, item2: uint64): boolean; overload; inline;
 
-function areEquals(item1, item2: single): boolean; overload;
-function areEquals(item1, item2: double): boolean; overload;
+function areEquals(item1, item2: single): boolean; overload; inline;
+function areEquals(item1, item2: double): boolean; overload; inline;
 
-function areEquals(item1, item2: ansistring): boolean; overload;
-function areEquals(item1, item2: WideString): boolean; overload;
-function areEquals(item1, item2: utf8string): boolean; overload;
+function areEquals(item1, item2: ansistring): boolean; overload; inline;
+function areEquals(item1, item2: widestring): boolean; overload; inline;
+function areEquals(item1, item2: utf8string): boolean; overload; inline;
 
 function areEquals(item1, item2: TObject): boolean; overload;
 
@@ -436,7 +440,7 @@ type
     fNext: IHashtableMapEntry<aKeyType, aValueType>;
   public
     constructor Create(aHash: int64; aKey: aKeyType; aValue: aValueType; aNext: IHashtableMapEntry<aKeyType, aValueType>);
-    function equals(o: IMapEntry<aKeyType, aValueType>): boolean; virtual;
+    function equals(o: IMapEntry<aKeyType, aValueType>): boolean; reintroduce; virtual;
     function getKey(): aKeyType; virtual;
     function hashCode(): THashCode; virtual;
     function getValue(): aValueType; virtual;
@@ -452,12 +456,14 @@ begin
     Result := longint(E_NOINTERFACE);
 end;
 
-function THashtable<aKeyType, aValueType>._AddRef: longint;{$IFNDEF WINDOWS} cdecl{$ELSE}stdcall{$ENDIF};
+function THashtable<aKeyType, aValueType>._AddRef: longint;
+  {$IFNDEF WINDOWS} cdecl{$ELSE}stdcall{$ENDIF};
 begin
   Result := InterlockedIncrement(FRefCount);
 end;
 
-function THashtable<aKeyType, aValueType>._Release: longint;{$IFNDEF WINDOWS} cdecl{$ELSE}stdcall{$ENDIF};
+function THashtable<aKeyType, aValueType>._Release: longint;
+  {$IFNDEF WINDOWS} cdecl{$ELSE}stdcall{$ENDIF};
 begin
   Result := InterlockedDecrement(FRefCount);
   if Result = 0 then
@@ -842,7 +848,8 @@ begin
   fValue := aValue;
 end;
 
-function TSimpleMapEntry<aKeyType, aValueType>.equals(o: IMapEntry<aKeyType, aValueType>): boolean;
+function TSimpleMapEntry<aKeyType,
+aValueType>.equals(o: IMapEntry<aKeyType, aValueType>): boolean;
 begin
   Result := areEquals(fKey, o.getKey()) and areEquals(fValue, o.getValue());
 end;
@@ -927,7 +934,7 @@ begin
   Result := aValue.GetHashCode;
 end;
 
-function CalculateHashCode(const aValue: WideString): THashCode;
+function CalculateHashCode(const aValue: widestring): THashCode;
 var
   p: pwidechar;
 begin
@@ -940,45 +947,44 @@ begin
   end;
 end;
 
-function CalculateHashCode(const aValue: utf8string): THashCode;
-
-  function OrdChar(var p: PChar): uint64;
-  {
-  https://wiki.freepascal.org/UTF8_strings_and_characters
-  1 byte  : 0xxxxxxx
-  2 bytes : 110xxxxx 10xxxxxx
-  3 bytes : 1110xxxx 10xxxxxx 10xxxxxx
-  4 bytes : 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-  }
-  var
-    bufferSize: uint8;
-    idx: uint8;
-  begin
-    bufferSize := 1;
-    if (Ord(p^) and %11110000) = %11110000 then
-    begin
-      bufferSize := 4;
-    end
-    else
-    if (Ord(p^) and %11100000) = %11100000 then
-    begin
-      bufferSize := 3;
-    end
-    else
-    if (Ord(p^) and %1100000) = %1100000 then
-    begin
-      bufferSize := 2;
-    end;
-    Result := 0;
-    for idx := 0 to bufferSize - 1 do
-    begin
-      Result := Result + Ord(p^);
-      Inc(p);
-    end;
-  end;
-
+function OrdChar(var p: pchar): uint64;
+{
+https://wiki.freepascal.org/UTF8_strings_and_characters
+1 byte  : 0xxxxxxx
+2 bytes : 110xxxxx 10xxxxxx                    $C0 $C0
+3 bytes : 1110xxxx 10xxxxxx 10xxxxxx           $E0 $C0
+4 bytes : 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx  $F0 $C0
+}
 var
-  p: PChar;
+  bufferSize: uint8;
+  idx: uint8;
+begin
+  bufferSize := 1;
+  if (Ord(p^) and $F0) = $F0 then
+  begin
+    bufferSize := 4;
+  end
+  else
+  if (Ord(p^) and $E0) = $E0 then
+  begin
+    bufferSize := 3;
+  end
+  else
+  if (Ord(p^) and $C0) = $C0 then
+  begin
+    bufferSize := 2;
+  end;
+  Result := 0;
+  for idx := 0 to bufferSize - 1 do
+  begin
+    Result := Result + Ord(p^);
+    Inc(p);
+  end;
+end;
+
+function CalculateHashCode(const aValue: utf8string): THashCode;
+var
+  p: pchar;
 begin
   p := PChar(aValue);
   Result := 0;
@@ -1048,7 +1054,7 @@ begin
   Result := item1 = item2;
 end;
 
-function areEquals(item1, item2: WideString): boolean;
+function areEquals(item1, item2: widestring): boolean;
 begin
   Result := item1 = item2;
 end;
@@ -1215,7 +1221,8 @@ begin
   fNext := aNext;
 end;
 
-function THashtableEntity<aKeyType, aValueType>.equals(o: IMapEntry<aKeyType, aValueType>): boolean;
+function THashtableEntity<aKeyType,
+aValueType>.equals(o: IMapEntry<aKeyType, aValueType>): boolean;
 begin
 
 end;
