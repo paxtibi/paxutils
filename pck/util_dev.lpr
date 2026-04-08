@@ -13,8 +13,7 @@ uses
   Windows,
   {$EndIf}
   Interfaces,
-  paxutils,
-  paxutils_package;
+  paxutils;
 
 type
   { TLockThread }

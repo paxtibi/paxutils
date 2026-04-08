@@ -13,7 +13,7 @@
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\src\$(TargetOS)"/>
+            <OtherUnitFiles Value="..\src;..\src\$(TargetOS)"/>
             <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
@@ -47,13 +47,12 @@
         </CompilerOptions>
       </Item1>
     </BuildModes>
-    <Units Count="38">
+    <Units Count="40">
       <Unit0>
         <Filename Value="util_dev.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="4"/>
-        <TopLine Value="36"/>
-        <CursorPos X="46" Y="45"/>
+        <EditorIndex Value="1"/>
+        <CursorPos X="19" Y="16"/>
         <UsageCount Value="255"/>
         <Loaded Value="True"/>
       </Unit0>
@@ -107,8 +106,8 @@
       </Unit7>
       <Unit8>
         <Filename Value="..\src\paxutils.pas"/>
-        <TopLine Value="411"/>
-        <CursorPos X="42" Y="422"/>
+        <TopLine Value="442"/>
+        <CursorPos X="15" Y="461"/>
         <UsageCount Value="103"/>
         <Loaded Value="True"/>
       </Unit8>
@@ -288,30 +287,40 @@
       </Unit34>
       <Unit35>
         <Filename Value="..\..\paxbatch\src\paxutils.batch.pas"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="39" Y="11"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit35>
       <Unit36>
         <Filename Value="..\..\paxbatch\src\paxutils.persistence.pas"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="205"/>
         <CursorPos X="52" Y="16"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit36>
       <Unit37>
         <Filename Value="..\..\paxbatch\src\paxutils.persistence.engines.pas"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="3"/>
-        <TopLine Value="7"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="39" Y="17"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
       </Unit37>
+      <Unit38>
+        <Filename Value="..\src\windows\md_paxutils.inc"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="33"/>
+        <CursorPos Y="51"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit38>
+      <Unit39>
+        <Filename Value="..\src\md_paxutils.inc"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos Y="6"/>
+        <UsageCount Value="10"/>
+      </Unit39>
     </Units>
-    <JumpHistory Count="5" HistoryIndex="4">
+    <JumpHistory Count="27" HistoryIndex="26">
       <Position1>
         <Filename Value="..\src\paxutils.pas"/>
         <Caret Line="245" Column="10" TopLine="227"/>
@@ -332,6 +341,94 @@
         <Filename Value="..\src\paxutils.pas"/>
         <Caret Line="422" Column="42" TopLine="411"/>
       </Position5>
+      <Position6>
+        <Filename Value="util_dev.lpr"/>
+        <Caret Line="86" Column="25" TopLine="63"/>
+      </Position6>
+      <Position7>
+        <Filename Value="..\src\paxutils.pas"/>
+        <Caret Line="432" Column="10" TopLine="417"/>
+      </Position7>
+      <Position8>
+        <Filename Value="..\src\paxutils.pas"/>
+        <Caret Line="576" Column="3" TopLine="574"/>
+      </Position8>
+      <Position9>
+        <Filename Value="..\src\paxutils.pas"/>
+        <Caret Line="452" Column="14" TopLine="437"/>
+      </Position9>
+      <Position10>
+        <Filename Value="util_dev.lpr"/>
+        <Caret Line="115" Column="44" TopLine="100"/>
+      </Position10>
+      <Position11>
+        <Filename Value="util_dev.lpr"/>
+        <Caret Line="14" Column="54"/>
+      </Position11>
+      <Position12>
+        <Filename Value="..\src\paxutils.pas"/>
+        <Caret Line="458" Column="37" TopLine="442"/>
+      </Position12>
+      <Position13>
+        <Filename Value="..\src\paxutils.pas"/>
+        <Caret Line="460" Column="29" TopLine="442"/>
+      </Position13>
+      <Position14>
+        <Filename Value="..\src\paxutils.pas"/>
+        <Caret Line="461" Column="56" TopLine="442"/>
+      </Position14>
+      <Position15>
+        <Filename Value="util_dev.lpr"/>
+        <Caret Line="18" Column="24"/>
+      </Position15>
+      <Position16>
+        <Filename Value="util_dev.lpr"/>
+        <Caret Line="16" Column="19"/>
+      </Position16>
+      <Position17>
+        <Filename Value="..\src\windows\md_paxutils.inc"/>
+        <Caret Line="60" TopLine="48"/>
+      </Position17>
+      <Position18>
+        <Filename Value="..\src\windows\md_paxutils.inc"/>
+        <Caret Line="61" TopLine="48"/>
+      </Position18>
+      <Position19>
+        <Filename Value="..\src\windows\md_paxutils.inc"/>
+        <Caret Line="62" TopLine="48"/>
+      </Position19>
+      <Position20>
+        <Filename Value="..\src\windows\md_paxutils.inc"/>
+        <Caret Line="64" TopLine="48"/>
+      </Position20>
+      <Position21>
+        <Filename Value="..\src\windows\md_paxutils.inc"/>
+        <Caret Line="66" TopLine="48"/>
+      </Position21>
+      <Position22>
+        <Filename Value="..\src\windows\md_paxutils.inc"/>
+        <Caret Line="69" TopLine="48"/>
+      </Position22>
+      <Position23>
+        <Filename Value="..\src\windows\md_paxutils.inc"/>
+        <Caret Line="45" TopLine="30"/>
+      </Position23>
+      <Position24>
+        <Filename Value="..\src\windows\md_paxutils.inc"/>
+        <Caret Line="46" TopLine="30"/>
+      </Position24>
+      <Position25>
+        <Filename Value="..\src\windows\md_paxutils.inc"/>
+        <Caret Line="47" TopLine="30"/>
+      </Position25>
+      <Position26>
+        <Filename Value="..\src\windows\md_paxutils.inc"/>
+        <Caret Line="48" TopLine="30"/>
+      </Position26>
+      <Position27>
+        <Filename Value="..\src\windows\md_paxutils.inc"/>
+        <Caret Line="50" Column="15" TopLine="30"/>
+      </Position27>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>
@@ -351,6 +448,20 @@
         <WatchKind Value="wpkWrite"/>
         <Source Value="..\src\paxutils.containers.pas"/>
         <Line Value="949"/>
+      </Item>
+      <Item>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="..\src\windows\md_paxutils.inc"/>
+        <Line Value="71"/>
+      </Item>
+      <Item>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="..\src\windows\md_paxutils.inc"/>
+        <Line Value="51"/>
       </Item>
     </BreakPoints>
   </Debugging>

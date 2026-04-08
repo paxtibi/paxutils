@@ -56,13 +56,10 @@
     <RunParams>
       <FormatVersion Value="2"/>
     </RunParams>
-    <RequiredPackages Count="2">
+    <RequiredPackages Count="1">
       <Item1>
         <PackageName Value="LCL"/>
       </Item1>
-      <Item2>
-        <PackageName Value="paxutils_package"/>
-      </Item2>
     </RequiredPackages>
     <Units Count="1">
       <Unit0>

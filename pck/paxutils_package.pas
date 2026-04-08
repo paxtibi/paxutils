@@ -8,7 +8,7 @@ unit paxutils_package;
 interface
 
 uses
-  paxutils, paxutils.colors, LazarusPackageIntf;
+  paxutils, paxutils.colors, paxutils.containers, LazarusPackageIntf;
 
 implementation
 

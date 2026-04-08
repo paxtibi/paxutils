@@ -455,7 +455,12 @@ type
 var
   OS: TOS;
 
-  {$I md_paxutils.inc}
+{$ifdef WINDOWS}
+  {$include ..\src\windows\md_paxutils.inc}
+{$endif}
+{$ifdef LINUX}
+  {$include ../src/unix/md_paxutils.inc}
+{$endif}
 
   { EIndexOutOfBoundsException }
 

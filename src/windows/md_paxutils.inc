@@ -41,6 +41,7 @@ const
 function SetupI18nProps(lcid: LCID; var locale: TLocale): boolean;
 var
   tmp: array[0..SNAMESIZE - 1] of char;
+  slices: TStringArray;
   s: string;
 begin
   Result := True;
@@ -48,6 +49,16 @@ begin
   if (GetLocaleInfo(lcid, LOCALE_ENUMPROC, @tmp, SNAMESIZE) > 0) then
   begin
     s := tmp;
+    slices := s.Split('-');
+    if Length(slices) > 0 then
+      locale.language := slices[0];
+    if Length(slices) > 1 then
+      locale.country := slices[1];
+    if Length(slices) > 2 then
+    begin
+      locale.script := locale.country;
+      locale.country := slices[2];
+    end;
   end;
 end;
 

@@ -172,7 +172,7 @@ const
   MAX_RADIX = 36;
   Theme_Color_Interval = 0.08;
   yiq_contrasted_threshold = 150;
-{$J-}
+  {$J-}
 
 var
   clBtnDefault_color: TColor;
@@ -259,12 +259,12 @@ type
 
 
 function parseInt(Value: string; radix: int32 = 16): int64;
-function parseDouble(Value: string): Double;
+function parseDouble(Value: string): double;
 function cssCodeToColor(webCode: string): TColor;
 
 operator := (commonValue: string): TColor;
 operator := (Value: TRGBA): TColor;
-operator := (color: TColor): String;
+operator := (color: TColor): string;
 
 function lighten(color: TColor; percent: single; method: TManipulationMethod = mmAbsolute): TColor;
 function darken(color: TColor; percent: single): TColor;
@@ -288,22 +288,22 @@ uses
 const
   numberDictionary = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-function Blue(rgb: TColor): Byte;
+function Blue(rgb: TColor): byte;
 begin
   Result := (rgb shr 16) and $000000ff;
 end;
 
-function Green(rgb: TColor): Byte;
+function Green(rgb: TColor): byte;
 begin
   Result := (rgb shr 8) and $000000ff;
 end;
 
-function Red(rgb: TColor): Byte;
+function Red(rgb: TColor): byte;
 begin
   Result := rgb and $000000ff;
 end;
 
-function RGBToColor(R, G, B: Byte): TColor;
+function RGBToColor(R, G, B: byte): TColor;
 begin
   Result := (B shl 16) or (G shl 8) or R;
 end;
@@ -387,9 +387,9 @@ begin
     Result := -Result;
 end;
 
-function parseDouble(Value: string): Double;
+function parseDouble(Value: string): double;
 begin
-  TryStrToFloat(Value,Result);
+  TryStrToFloat(Value, Result);
 end;
 
 function cssCodeToColor(webCode: string): TColor;
@@ -487,9 +487,9 @@ begin
 
 end;
 
-operator := (color: TColor): String;
+operator := (color: TColor): string;
 begin
-  result := format('rgb(%d,%d,%d)', [color.red, color.green, color.blue]);
+  Result := format('rgb(%d,%d,%d)', [color.red, color.green, color.blue]);
 end;
 
 function lighten(color: TColor; percent: single; method: TManipulationMethod): TColor;
@@ -656,7 +656,6 @@ function rgba(color: THSLA): TRGBA;
 var
   m1, m2: single;
   rgb: TRGBA absolute Result;
-
 begin
   while color.hue > 360 do
     color.hue -= 360;
