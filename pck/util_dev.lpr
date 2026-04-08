@@ -70,8 +70,7 @@ type
   var
     waitTime: word = 1000;
   begin
-    Writeln('TLockThread: Semaphore RED, keep red for ', waitTime div
-      1000, ' seconds (', waitTime div (1000 * 60), ' minutes)');
+    Writeln('TLockThread: Semaphore RED, keep red for ', waitTime div 1000, ' seconds (', waitTime div (1000 * 60), ' minutes)');
     Semaphore.acquire();
     sleep(waitTime);
     Semaphore.Release();
@@ -91,6 +90,7 @@ type
     until not FSemaphore.isInUsed;
     Writeln('Exit after ', t.elapsed.toString);
     Writeln('Press any key to terminate');
+    getUserLocale;
     ReadKey;
     Terminate(0);
   end;
