@@ -83,6 +83,7 @@ type
   var
     t: TTimer = 0;
   begin
+    getUserLocale;
     t.restart;
     Writeln;
     repeat
@@ -90,7 +91,6 @@ type
     until not FSemaphore.isInUsed;
     Writeln('Exit after ', t.elapsed.toString);
     Writeln('Press any key to terminate');
-    getUserLocale;
     ReadKey;
     Terminate(0);
   end;
