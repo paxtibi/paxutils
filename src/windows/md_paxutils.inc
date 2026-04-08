@@ -32,6 +32,44 @@ begin
   Result := windows_to_java_time(wt);
 end;
 
+
+const
+  PROPSIZE = 9;      // eight-letter + null terminator
+  SNAMESIZE = 86;    // max number of chars for LOCALE_SNAME is 85
+  LOCALE_ENUMPROC = $0000005c;
+
+function SetupI18nProps(lcid: LCID; var locale: TLocale): boolean;
+var
+  tmp: array[0..SNAMESIZE - 1] of char;
+  s: string;
+begin
+  Result := True;
+  FillChar(tmp[0], SNAMESIZE, #0);
+  if (GetLocaleInfo(lcid, LOCALE_ENUMPROC, @tmp, SNAMESIZE) > 0) then
+  begin
+    s := tmp;
+  end;
+end;
+
+function TOS.getUserLocale: TLocale;
+var
+  userDefaultLCID, userDefaultUILCID: LCID;
+  userDefaultUILang: LANGID;
+  hStdHandle: HANDLE;
+begin
+  userDefaultLCID := Windows.GetUserDefaultLCID();
+  userDefaultUILang := Windows.GetUserDefaultLangID();
+  userDefaultUILCID := MAKELCID(userDefaultUILang, SORTIDFROMLCID(userDefaultLCID));
+
+  if (PRIMARYLANGID(LANGIDFROMLCID(userDefaultLCID)) = PRIMARYLANGID(userDefaultUILang)) then
+  begin
+    userDefaultUILCID := userDefaultLCID;
+  end;
+
+  SetupI18nProps(userDefaultLCID, Result);
+  SetupI18nProps(userDefaultUILCID, Result);
+end;
+
 procedure TOS.init;
 var
   jot: TFILETIME;
