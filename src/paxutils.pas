@@ -63,7 +63,7 @@ type
     {$IfDef has_attribute}
   public
     property UseAttribute: boolean read FUseAttribute write FUseAttribute;
-    {$EndIf}
+  {$EndIf}
   end;
 
   ESemaphoreException = class(Exception)
@@ -207,7 +207,7 @@ Adapted from
     function getBoolean(const key: ansistring; const defaultValue: boolean = False): boolean; overload; virtual;
     function getLongint(const key: ansistring; const defaultValue: longint = 0): longint; overload; virtual;
     function getExtended(const key: ansistring; const defaultValue: extended = 0): extended; overload; virtual;
-    function propertyNames: TStrings; overload; virtual;
+    function propertyNames: TStringArray; overload; virtual;
     function containKey(const aKey: string): boolean;
   end;
 
@@ -417,7 +417,23 @@ type
     property NextException: ESQLException read FNextException write SetNextException;
   end;
 
+  { TLocale }
+
+  TLocale = record
+    language: string;
+    country: string;
+    variant: string;
+    script: string;
+  public
+    constructor Create(aLanguage: string; aCountry: string = ''; aVariant: string = '');
+    function hashCode: int32;
+  end;
+
+function getUserLocale: TLocale;
+
 implementation
+
+{$R *.res}
 
 uses
   {$IFDEF WINDOWS}
@@ -428,9 +444,12 @@ uses
   Rtti, RttiUtils, dynlibs;
 
 type
+  { TOS }
+
   TOS = record
     procedure init;
     function currentTimeMillis: uint64;
+    function getUserLocale: TLocale;
   end;
 
 var
@@ -476,6 +495,22 @@ end;
 procedure ESQLException.SetNextException(const Value: ESQLException);
 begin
   FNextException := Value;
+end;
+
+{ TLocale }
+
+constructor TLocale.Create(aLanguage: string; aCountry: string; aVariant: string);
+begin
+  self.language := aLanguage;
+  self.country := aCountry;
+  self.variant := aVariant;
+  self.script := '';
+  ;
+end;
+
+function TLocale.hashCode: int32;
+begin
+  Result := language.GetHashCode xor country.GetHashCode xor variant.GetHashCode;
 end;
 
 { EException }
@@ -534,6 +569,11 @@ begin
     h := millis;
   end;
   Result := Format('%.2d:%.2d:%.2d.%.4d', [h, m, s, ms]);
+end;
+
+function getUserLocale: TLocale;
+begin
+  Result := OS.getUserLocale;
 end;
 
 { TMutex }
@@ -1224,7 +1264,7 @@ end;
 procedure TProperties.store(const _out_: TStream; const header: ansistring);
 var
   index: longint;
-  e: TStrings;
+  e: TStringArray;
   key, val: ansistring;
 begin
   //FValues.Sort;
@@ -1232,7 +1272,7 @@ begin
     writeln(_out_, '#' + header);
   writeln(_out_, '#' + DateToStr(now));
   e := propertyNames;
-  for index := 0 to e.Count - 1 do
+  for index := 0 to Length(e) - 1 do
   begin
     key := e[index];
     val := getProperty(ansistring(key));
@@ -1380,18 +1420,19 @@ begin
   end;
 end;
 
-function TProperties.propertyNames: TStrings;
+function TProperties.propertyNames: TStringArray;
 var
-  index: longint;
+  l, index: longint;
 begin
   if assigned(FDefaults) then
     Result := FDefaults.propertyNames
   else
-    Result := TStringList.Create;
-
-  for index := 0 to FValues.Count - 1 do
+    SetLength(Result, 0);
+  l := Length(Result);
+  SetLength(Result, l + FValues.Count);
+  for index := l to FValues.Count - 1 do
   begin
-    Result.Add(FValues.Names[index]);
+    Result[index] := FValues.Names[index];
   end;
 end;
 
@@ -1459,7 +1500,6 @@ end;
 
 
 initialization
-  {$R *.res}
 
   OS.init;
 
