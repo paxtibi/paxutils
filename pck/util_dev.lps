@@ -42,7 +42,7 @@
             </Debugging>
           </Linking>
           <Other>
-            <CompilerPath Value="D:\fpcupdeluxe\fpc\bin\x86_64-win64\fpc.exe"/>
+            <CompilerPath Value="$(Lazarusdir)\fpc\3.2.2\bin\x86_64-win64\fpc.exe"/>
           </Other>
         </CompilerOptions>
       </Item1>
@@ -52,7 +52,7 @@
         <Filename Value="util_dev.lpr"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="1"/>
-        <CursorPos X="19" Y="16"/>
+        <CursorPos X="12" Y="16"/>
         <UsageCount Value="255"/>
         <Loaded Value="True"/>
       </Unit0>
