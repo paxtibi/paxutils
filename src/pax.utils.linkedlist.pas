@@ -5,7 +5,7 @@ unit pax.utils.linkedlist;
 interface
 
 uses
-  Classes, SysUtils, paxutils.containers;
+  Classes, SysUtils, pax.utils.containers;
 
 type
   { TLinkedList }

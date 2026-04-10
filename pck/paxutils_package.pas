@@ -8,11 +8,8 @@ unit paxutils_package;
 interface
 
 uses
-  pax.utils,
-  pax.utils.colors,
-  pax.utils.containers,
-  pax.utils.calandars,
-  LazarusPackageIntf;
+  pax.utils.arraylist, pax.utils.colors, pax.utils.containers, 
+  pax.utils.linkedlist, pax.utils, LazarusPackageIntf;
 
 implementation
 

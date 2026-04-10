@@ -9,6 +9,7 @@
       <Version Value="11"/>
       <PathDelim Value="\"/>
       <SearchPaths>
+        <IncludeFiles Value="..\src"/>
         <OtherUnitFiles Value="..\src;..\src\$(TargetOS)"/>
         <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)\fpc-$(FPC_FULLVERSION)"/>
       </SearchPaths>
@@ -18,13 +19,13 @@
         </Optimizations>
       </CodeGeneration>
     </CompilerOptions>
-    <Files Count="5">
+    <Files Count="6">
       <Item1>
-        <Filename Value="..\src\windows\pax.utils.pas"/>
-        <UnitName Value="pax.utils"/>
+        <Filename Value="..\src\pax.utils.arraylist.pas"/>
+        <UnitName Value="pax.utils.arraylist"/>
       </Item1>
       <Item2>
-        <Filename Value="..\src\windows\pax.utils.colors.pas"/>
+        <Filename Value="..\src\pax.utils.colors.pas"/>
         <UnitName Value="pax.utils.colors"/>
       </Item2>
       <Item3>
@@ -32,15 +33,17 @@
         <UnitName Value="pax.utils.containers"/>
       </Item3>
       <Item4>
-        <Filename Value="..\src\pax.utils.arraylist.pas"/>
-        <AddToUsesPkgSection Value="False"/>
-        <UnitName Value="pax.utils.arraylist"/>
+        <Filename Value="..\src\pax.utils.linkedlist.pas"/>
+        <UnitName Value="pax.utils.linkedlist"/>
       </Item4>
       <Item5>
-        <Filename Value="..\src\pax.utils.linkedlist.pas"/>
-        <AddToUsesPkgSection Value="False"/>
-        <UnitName Value="pax.utils.linkedlist"/>
+        <Filename Value="..\src\pax.utils.pas"/>
+        <UnitName Value="pax.utils"/>
       </Item5>
+      <Item6>
+        <Filename Value="..\src\pax.utils.res"/>
+        <Type Value="Binary"/>
+      </Item6>
     </Files>
     <CompatibilityMode Value="True"/>
     <RequiredPkgs Count="1">

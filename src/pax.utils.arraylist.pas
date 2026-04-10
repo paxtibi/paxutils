@@ -5,7 +5,7 @@ unit pax.utils.arraylist;
 interface
 
 uses
-  Classes, SysUtils, paxutils.containers;
+  Classes, SysUtils, pax.utils.containers;
 
 type
   { TArrayList }
