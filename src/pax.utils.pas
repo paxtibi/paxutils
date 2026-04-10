@@ -1,4 +1,4 @@
-unit paxutils;
+unit pax.utils;
 
 {$mode delphi}{$H+}
 {$M+}
@@ -430,6 +430,8 @@ type
   end;
 
 function getUserLocale: TLocale;
+
+
 
 implementation
 

@@ -13,7 +13,12 @@ uses
   Windows,
   {$EndIf}
   Interfaces,
-  paxutils;
+  pax.utils,
+  pax.utils.colors,
+  pax.utils.containers,
+  pax.utils.arraylist,
+  pax.utils.linkedlist,
+  pax.utils.calendars;
 
 type
   { TLockThread }

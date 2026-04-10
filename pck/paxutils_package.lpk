@@ -20,26 +20,26 @@
     </CompilerOptions>
     <Files Count="5">
       <Item1>
-        <Filename Value="..\src\paxutils.pas"/>
-        <UnitName Value="paxutils"/>
+        <Filename Value="..\src\windows\pax.utils.pas"/>
+        <UnitName Value="pax.utils"/>
       </Item1>
       <Item2>
-        <Filename Value="..\src\paxutils.colors.pas"/>
-        <UnitName Value="paxutils.colors"/>
+        <Filename Value="..\src\windows\pax.utils.colors.pas"/>
+        <UnitName Value="pax.utils.colors"/>
       </Item2>
       <Item3>
-        <Filename Value="..\src\paxutils.containers.pas"/>
-        <UnitName Value="paxutils.containers"/>
+        <Filename Value="..\src\pax.utils.containers.pas"/>
+        <UnitName Value="pax.utils.containers"/>
       </Item3>
       <Item4>
-        <Filename Value="..\src\paxutils.arraylist.pas"/>
+        <Filename Value="..\src\pax.utils.arraylist.pas"/>
         <AddToUsesPkgSection Value="False"/>
-        <UnitName Value="paxutils.arraylist"/>
+        <UnitName Value="pax.utils.arraylist"/>
       </Item4>
       <Item5>
-        <Filename Value="..\src\paxutils.linkedlist.pas"/>
+        <Filename Value="..\src\pax.utils.linkedlist.pas"/>
         <AddToUsesPkgSection Value="False"/>
-        <UnitName Value="paxutils.linkedlist"/>
+        <UnitName Value="pax.utils.linkedlist"/>
       </Item5>
     </Files>
     <CompatibilityMode Value="True"/>

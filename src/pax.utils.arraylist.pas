@@ -1,4 +1,4 @@
-unit paxutils.arraylist;
+unit pax.utils.arraylist;
 
 {$mode delphi}{$H+}
 

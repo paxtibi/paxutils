@@ -1,4 +1,4 @@
-unit paxutils.colors;
+unit pax.utils.colors;
 
 {$mode objfpc}{$H+}
 {$ModeSwitch typehelpers}
